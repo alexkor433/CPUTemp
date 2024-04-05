@@ -17,22 +17,46 @@
 	
 	Возможности:
 	- получение температуры процессора
-	- настройка параметра смещения (компансации, offset) температуры
+	- настройка параметра смещения (компенсации, offset) температуры
 	- настройка параметра прироста (gain) температуры
 	
 	MIT License
 	
 	Версии:
-	v1.0 - релиз
-	v1.1 - добавлен параметр настройки усиления (прироста) gain температуры
+	v1.0 - Релиз
+	v1.1 - Добавлен параметр настройки усиления (прироста) gain температуры
 	для более точной настройки (без объявления установлен по умолчанию - 1.22)
+	v1.1.1 - Добавлены предупреждения о поддержке чипа (MCU)
+	v1.2 - Оптимизация (передача параметров по ссылке)//28.01.24
 */
 
 #pragma once
 #include <Arduino.h>
+
+
+#if not (						\
+defined (__AVR_ATmega168A__) || \
+defined (__AVR_ATmega168P__) || \
+defined (__AVR_ATmega168PA__)|| \
+defined (__AVR_ATmega16M1__) || \
+defined (__AVR_ATmega16U4__) || \
+defined (__AVR_ATmega328__)  || \
+defined (__AVR_ATmega328P__) || \
+defined (__AVR_ATmega32M1__) || \
+defined (__AVR_ATmega32U4__) || \
+defined (__AVR_ATmega48A__)  || \
+defined (__AVR_ATmega48P__)  || \
+defined (__AVR_ATmega48PA__) || \
+defined (__AVR_ATmega64M1__) || \
+defined (__AVR_ATmega88A__)  || \
+defined (__AVR_ATmega88P__)  || \
+defined (__AVR_ATmega88PA__))
+#error "This MCU is not supported in CPUTemperature.h library"
+#endif
+
 class CPUTemperature {
 public:
-	CPUTemperature(double tempOffset = 324.31, double tempGain = 1.22) { // 324.31, 1.22 - параметры по умолчанию
+	CPUTemperature(const double& tempOffset = 324.31, const double& tempGain = 1.22) { // 324.31, 1.22 - параметры по умолчанию
 		_tempOffset = tempOffset;
 		_tempGain = tempGain;
 	}
