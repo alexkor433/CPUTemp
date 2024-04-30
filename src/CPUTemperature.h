@@ -27,7 +27,8 @@
 	v1.1 - Добавлен параметр настройки усиления (прироста) gain температуры
 	для более точной настройки (без объявления установлен по умолчанию - 1.22)
 	v1.1.1 - Добавлены предупреждения о поддержке чипа (MCU)
-	v1.2 - Оптимизация (передача параметров по ссылке)//28.01.24
+	v1.2 - Оптимизация (передача параметров по ссылке) //28.01.24
+	v1.2.1 - Использование списка инициализации конструктора вместо присваивания, (калибровочные параметры - константы) // 29.04.24
 */
 
 #pragma once
@@ -56,10 +57,8 @@ defined (__AVR_ATmega88PA__))
 
 class CPUTemperature {
 public:
-	CPUTemperature(const double& tempOffset = 324.31, const double& tempGain = 1.22) { // 324.31, 1.22 - параметры по умолчанию
-		_tempOffset = tempOffset;
-		_tempGain = tempGain;
-	}
+	// 324.31, 1.22 - параметры по умолчанию
+	CPUTemperature(const double& tempOffset = 324.31, const double& tempGain = 1.22) : tempOffset(tempOffset), tempGain(tempGain) {}
 
 	double getCPUTemp(void) {
 		unsigned int wADC;
@@ -84,10 +83,10 @@ public:
 		wADC = ADCW;
 
 		// Температура в градусах Цельсия
-		return (wADC - _tempOffset ) / _tempGain;
+		return (wADC - tempOffset ) / tempGain;
 	}
 
 private:
-	double _tempOffset;
-	double _tempGain;
+	const double tempOffset;
+	const double tempGain;
 };
